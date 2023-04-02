@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cookie Clicker Timer
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  Adds a clock to Cookie Clicker that shows how much 'time' is in the bank right now. Also shows sudden differences.
 // @author       You
 // @match        orteil.dashnet.org/cookieclicker/
@@ -179,6 +179,7 @@
         div.classList.add("monospace");
         div.style.fontSize = "20px";
         div.style.textAlign = "center";
+        div.style.textShadow = "1px 0px 0px #000,-1px 0px 0px #000,0px 1px 0px #000,0px -1px 0px #000,0px 1px 4px #000";
 
         return div;
     }
