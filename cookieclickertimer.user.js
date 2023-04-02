@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cookie Clicker Timer
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Adds a clock to Cookie Clicker that shows how much 'time' is in the bank right now. Also shows sudden differences.
 // @author       You
 // @match        orteil.dashnet.org/cookieclicker/
@@ -19,7 +19,7 @@
             // How long to show the delta clock for in ms
             displayTime: 5000,
             // How significant the deviation from the current buffed cps needs to be in order to be considered significant.
-            // A value of 5 means, 5 times greates than the cps.
+            // A value of 5 means, 5 times greater than the cps.
             significantChange: 5,
             // Hex color of the delta clock when the delta is positive
             colorPositive: "#90ee90",
@@ -43,6 +43,7 @@
     var Layout = {
         // The left section. That is the one containing the big cookie.
         sectionLeft: document.getElementById("sectionLeft"),
+        anchor: createAnchorElement(),
         // The main element, containing all others.
         main: createMainElement(),
         // The clock showing the current amount of 'time' in the bank.
@@ -109,7 +110,7 @@
             CookieDelta.showUntil = timeNow + Settings.delta.displayTime;
         }
 
-        // Update div and show or hide it depending on timer
+        // Update div and show or hide it
         if (CookieDelta.showUntil > timeNow) {
             let sign = CookieDelta.totalDelta > 0 ? "+ " : "- ";
             let color = CookieDelta.totalDelta > 0 ? Settings.delta.colorPositive : Settings.delta.colorNegative;
@@ -125,6 +126,19 @@
         CookieDelta.recordedBank = Game.cookies;
     }
 
+    function createAnchorElement() {
+        var div = document.createElement("div");
+
+        div.id = "CCT.anchor";
+        div.style.position = "absolute";
+        div.style.left = "0px";
+        div.style.top = "10%";
+        div.style.width = "100%";
+        div.style.zIndex = "100";
+
+        return div;
+    }
+
     // Create the main element housing all other elements
     function createMainElement() {
         var div = document.createElement("div");
@@ -132,11 +146,9 @@
         div.id = "CCT.main";
         div.classList.add("title");
         div.style.position = "absolute";
-        div.style.left = "0px";
-        div.style.top = "19%";
+        div.style.top = "3em";
+        div.style.padding = ".25em";
         div.style.width = "100%";
-        div.style.zIndex = "100";
-        div.style.padding = "4px";
         div.style.background = "rgba(0,0,0,0.4)";
 
         return div;
@@ -174,7 +186,8 @@
     // Set everything up
     function setup() {
         //Setup the layout
-        Layout.sectionLeft.appendChild(Layout.main);
+        Layout.sectionLeft.appendChild(Layout.anchor);
+        Layout.anchor.appendChild(Layout.main);
         Layout.main.appendChild(Layout.bank);
         Layout.main.appendChild(Layout.delta);
 
