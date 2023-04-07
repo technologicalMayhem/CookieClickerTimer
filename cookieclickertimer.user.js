@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cookie Clicker Timer
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Adds a clock to Cookie Clicker that shows how much 'time' is in the bank right now. Also shows sudden differences.
 // @author       You
 // @match        orteil.dashnet.org/cookieclicker/
@@ -85,11 +85,21 @@
     }
 
     function updateBankClock() {
-        var time = (Game.cookies / Game.unbuffedCps);
-        Layout.bank.innerHTML = formatTime(time);
+        if (Game.unbuffedCps == 0) {
+            Layout.bank.innerHTML = "No production yet.";
+        } else {
+            var time = (Game.cookies / Game.unbuffedCps);
+            Layout.bank.innerHTML = formatTime(time);
+        }
     }
 
     function updateDeltaClock() {
+        if (Game.unbuffedCps == 0) {
+            // No production. Nothing to do here.
+            // Update the record
+            CookieDelta.recordedBank = Game.cookies;
+            return;
+        }
         // Get the delta for how much time has passed since the last check
         let timeNow = Date.now();
         let timeDelta = timeNow - CookieDelta.lastCheck;
